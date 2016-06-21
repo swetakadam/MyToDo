@@ -24,7 +24,7 @@ Here are few things which you can do with the APP
 
 Walkthrough of all user stories:
 
-![Video Walkthrough]MyToDoDemo.gif
+![mytododemo](https://cloud.githubusercontent.com/assets/5216040/16219905/453ca850-373e-11e6-832a-5caacb658369.gif)
 
 I have played with the Theme little bit and tried to tweak little colors and so on.
 But a ton of work can be done to improve this app and make it look more professional.
