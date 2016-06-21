@@ -8,9 +8,8 @@ This is my first Android app repository.This was done to submit the prework for 
 I am really excited for the BootCamp  .. hope I get a seat ...
 
 All these years I have been an API Engineer with some hands on UI design using JSP , HTML , PHP , Angular JS, jQuery.
-Now I am venturing into new mobile world.
+Now I am venturing into exciting Mobile world.
 
-I hope to improve this app further  ...
 
 The first version is basic todo list.
 
