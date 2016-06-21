@@ -22,6 +22,10 @@ Here are few things which you can do with the APP
 4. Save the edited item
 5. list is temperarily stored in a text file on device
 
+Walkthrough of all user stories:
+
+![Video Walkthrough]MyToDoDemo.gif
+
 I have played with the Theme little bit and tried to tweak little colors and so on.
 But a ton of work can be done to improve this app and make it look more professional.
 
