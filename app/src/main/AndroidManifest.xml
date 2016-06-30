@@ -23,6 +23,10 @@
             android:label="@string/edit_item_text">
 
         </activity>
+        <provider
+            android:authorities="com.example.swetashinde.mytodo"
+            android:name=".data.TaskProvider">
+        </provider>
     </application>
 
 </manifest>
