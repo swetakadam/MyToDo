@@ -5,4 +5,10 @@
     <string name="edit_item_label">Edit Item Below :</string>
     <string name="save_button">Save</string>
     <string name="edit_item_text">Edit Item</string>
+    <string name="task_name">Task Name </string>
+    <string name="due_date">Due Date</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="pick_date">Pick Date</string>
 </resources>

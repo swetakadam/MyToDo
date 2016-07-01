@@ -1,6 +1,7 @@
 package com.example.swetashinde.mytodo;
 
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -14,6 +15,8 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Toast;
+
 import org.apache.commons.io.FileUtils;
 
 
@@ -148,9 +151,20 @@ public class TodoActivity extends AppCompatActivity {
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
+        }else if (id == R.id.action_add_task){
+            //start a new activty here  ...
+            Intent i = new Intent(this,com.example.swetashinde.mytodo.AddTaskActivity.class);
+            //i.putExtra("position",position);
+            //i.putExtra("dataItem",dataItem);
+
+            //startActivityForResult(i,REQUEST_CODE);
+            startActivity(i);
+            return true ;
         }
 
         return super.onOptionsItemSelected(item);
     }
+
+
 
 }
