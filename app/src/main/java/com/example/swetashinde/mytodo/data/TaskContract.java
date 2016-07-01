@@ -56,6 +56,8 @@ public class TaskContract {
         // due date
         public static final String COLUMN_DUE_DATE = "due";
 
+        public static final String COLUMN_STATUS = "status"; //complete or pending
+
         public static final Uri CONTENT_URI =
                 BASE_CONTENT_URI.buildUpon().appendPath(PATH_TASK).build();
 

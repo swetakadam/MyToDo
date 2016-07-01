@@ -27,7 +27,8 @@ public class TaskDbHelper extends SQLiteOpenHelper {
                 TaskContract.TaskEntry.COLUMN_NAME + " TEXT NOT NULL, "+
                 TaskContract.TaskEntry.COLUMN_NOTES + " TEXT NOT NULL, "+
                 TaskContract.TaskEntry.COLUMN_PRIORITY + " TEXT NOT NULL, "+
-                TaskContract.TaskEntry.COLUMN_DUE_DATE + " INTEGER UNIQUE NOT NULL "+
+                TaskContract.TaskEntry.COLUMN_DUE_DATE + " INTEGER UNIQUE NOT NULL, "+
+                TaskContract.TaskEntry.COLUMN_STATUS + " TEXT NOT NULL "+
                 ");";
 
         //create the table task
