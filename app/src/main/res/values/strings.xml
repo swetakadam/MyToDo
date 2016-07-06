@@ -11,4 +11,21 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="pick_date">Pick Date</string>
+    <string name="due_date_text">Enter Date</string>
+    <string name="notes">Notes</string>
+    <string name="priority">Priority</string>
+    <string name="task_notes">Enter task notes</string>
+    <string name="status">Status</string>
+
+    <string-array name="priority_options">
+        <item>High</item>
+        <item>Medium</item>
+        <item>Low</item>
+    </string-array>
+
+    <string-array name="status">
+        <item>ToDo</item>
+        <item>Done</item>
+    </string-array>
+
 </resources>

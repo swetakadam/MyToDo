@@ -26,7 +26,7 @@ public class TestUtilities extends AndroidTestCase {
         testValues.put(TaskContract.TaskEntry.COLUMN_NOTES, "look for Vitamin D, DHA and Omega 3 added milk");
         testValues.put(TaskContract.TaskEntry.COLUMN_PRIORITY,"high" );
         testValues.put(TaskContract.TaskEntry.COLUMN_STATUS, "pending");
-        testValues.put(TaskContract.TaskEntry.COLUMN_DUE_DATE,1419033600L); // December 20th, 2014
+        testValues.put(TaskContract.TaskEntry.COLUMN_DUE_DATE,"Dec 20th 2014"); // December 20th, 2014
         return testValues;
     }
 

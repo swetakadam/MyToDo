@@ -1,0 +1,11 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.example.swetashinde.mytodo.TodoActivity">
+
+    <item
+     android:id="@+id/action_create_task"
+     android:title="Save" app:showAsAction="always"
+     android:icon="@drawable/save"/>
+
+</menu>

@@ -106,7 +106,7 @@ public class TaskProvider extends ContentProvider{
 
         switch (match) {
             case TASK: {
-                normalizeDate(values);
+                //normalizeDate(values);
                 long _id = db.insert(TaskContract.TaskEntry.TABLE_NAME, null, values);
                 if ( _id > 0 )
                     returnUri = TaskContract.TaskEntry.buildTaskUri(_id);

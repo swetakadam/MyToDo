@@ -17,7 +17,11 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.example.swetashinde.mytodo.model.Task;
+
 import org.apache.commons.io.FileUtils;
+import org.parceler.Parcel;
+import org.parceler.Parcels;
 
 
 import java.io.File;
@@ -30,6 +34,8 @@ public class TodoActivity extends AppCompatActivity {
     ArrayAdapter<String> itemsAdapter;
     ArrayList<String> items;
     private final int REQUEST_CODE = 200;
+    private final int ADD_TASK_REQUEST_CODE = 400;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -79,7 +85,14 @@ public class TodoActivity extends AppCompatActivity {
             saveItems();
 
 
+        } else if(resultCode == RESULT_OK && requestCode == ADD_TASK_REQUEST_CODE){
+
+            Task newTask = (Task) Parcels.unwrap(data.getParcelableExtra("taskNew"));
+            // need to store in database here :) ... but it should happen on another background thread ...
+
         }
+
+
 
     }
 
@@ -158,7 +171,7 @@ public class TodoActivity extends AppCompatActivity {
             //i.putExtra("dataItem",dataItem);
 
             //startActivityForResult(i,REQUEST_CODE);
-            startActivity(i);
+            startActivityForResult(i,ADD_TASK_REQUEST_CODE);
             return true ;
         }
 
