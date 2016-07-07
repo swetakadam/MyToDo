@@ -1,22 +1,34 @@
 package com.example.swetashinde.mytodo;
 
 
+import android.content.ContentResolver;
+import android.content.ContentUris;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.support.v4.widget.SimpleCursorAdapter;
 import android.support.v7.app.AppCompatActivity;
 
 
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.CursorAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.example.swetashinde.mytodo.custom.MyCursorAdapter;
+import com.example.swetashinde.mytodo.data.TaskContract;
 import com.example.swetashinde.mytodo.model.Task;
 
 import org.apache.commons.io.FileUtils;
@@ -32,9 +44,14 @@ public class TodoActivity extends AppCompatActivity {
 
     ListView lvItems;
     ArrayAdapter<String> itemsAdapter;
+    //SimpleCursorAdapter taskCursorAdapter;
+    MyCursorAdapter customAdapter;
+    Cursor taskCursor;
     ArrayList<String> items;
     private final int REQUEST_CODE = 200;
     private final int ADD_TASK_REQUEST_CODE = 400;
+
+    private final String LOGTAG = this.getClass().getSimpleName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,23 +60,47 @@ public class TodoActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        readItems();
+        //readItems();
+        // read now from database AND SET THE LIST VIEW USING SIMPLE CURSOR ADAPTER
+        //using simple cursor adapter :)
 
-        lvItems = (ListView) findViewById(R.id.lvItems);
-        items = new ArrayList<String>();
-        itemsAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,items);
-        lvItems.setAdapter(itemsAdapter);
+          taskCursor = readAll();
+          lvItems = (ListView) findViewById(R.id.lvItems);
+//        String[] columns = {TaskContract.TaskEntry.COLUMN_NAME,TaskContract.TaskEntry.COLUMN_NOTES};
+//        int[] ids = {android.R.id.text1,android.R.id.text2};
+//        taskCursorAdapter  = new SimpleCursorAdapter(this,android.R.layout.two_line_list_item,taskCursor,columns,ids,0);
+//        lvItems.setAdapter(taskCursorAdapter);
+
+
+        //using custom cursor adapter
 
         setupListViewListener();
 
+        // on background thread -- must be replaced by Cursor Loader
+        new Handler().post(new Runnable() {
+
+            @Override
+            public void run() {
+                customAdapter = new MyCursorAdapter(
+                        getApplicationContext(),
+                        taskCursor,
+                        0);
+
+                lvItems.setAdapter(customAdapter);
+            }
+
+        });
+
     }
+
+
 
     public void addTodoItem(View v){
 
-        EditText etNewItem = (EditText) findViewById(R.id.etNewItem);
-        itemsAdapter.add(etNewItem.getText().toString());
-        etNewItem.setText("");
-        saveItems();
+       // EditText etNewItem = (EditText) findViewById(R.id.etNewItem);
+       // itemsAdapter.add(etNewItem.getText().toString());
+       // etNewItem.setText("");
+       // saveItems();
 
 
     }
@@ -87,12 +128,26 @@ public class TodoActivity extends AppCompatActivity {
 
         } else if(resultCode == RESULT_OK && requestCode == ADD_TASK_REQUEST_CODE){
 
-            Task newTask = (Task) Parcels.unwrap(data.getParcelableExtra("taskNew"));
+            //should be done on background thread
+            Task newTask = (Task) Parcels.unwrap(data.getParcelableExtra("task"));
             // need to store in database here :) ... but it should happen on another background thread ...
+            ContentResolver resolver = getContentResolver();
+            ContentValues values     = new ContentValues();
+            values.put(TaskContract.TaskEntry.COLUMN_NAME,newTask.getName());
+            values.put(TaskContract.TaskEntry.COLUMN_NOTES,newTask.getNotes());
+            values.put(TaskContract.TaskEntry.COLUMN_PRIORITY,newTask.getPriority());
+            values.put(TaskContract.TaskEntry.COLUMN_STATUS,newTask.getStatus());
+            values.put(TaskContract.TaskEntry.COLUMN_DUE_DATE,newTask.getDueDate());
+
+            Uri taskUri = resolver.insert(TaskContract.TaskEntry.CONTENT_URI,values);
+            long taskRowId = ContentUris.parseId(taskUri);
+            Log.v(LOGTAG,"Task created in database with id"+taskRowId);
+
+            //now update the adapter  .. should we query table ???
+            taskCursor = readAll();
+            customAdapter.changeCursor(taskCursor);
 
         }
-
-
 
     }
 
@@ -101,9 +156,9 @@ public class TodoActivity extends AppCompatActivity {
         lvItems.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                items.remove(position);
-                itemsAdapter.notifyDataSetChanged();
-                saveItems();
+                //items.remove(position);
+                //itemsAdapter.notifyDataSetChanged();
+                //saveItems();
                 return true;
             }
         });
@@ -112,8 +167,8 @@ public class TodoActivity extends AppCompatActivity {
 
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String dataItem = items.get(position);
-                launchEditItemView(dataItem,position);
+                //String dataItem = items.get(position);
+                //launchEditItemView(dataItem,position);
             }
         });
     }
@@ -131,6 +186,13 @@ public class TodoActivity extends AppCompatActivity {
             ex.printStackTrace();
         }
 
+    }
+
+    //read from database using content provider
+    private Cursor readAll(){
+        ContentResolver resolver = getContentResolver();
+        Cursor taskCursor  = resolver.query(TaskContract.TaskEntry.CONTENT_URI,null,null,null,null);
+        return taskCursor;
     }
 
     private void saveItems(){
@@ -162,15 +224,11 @@ public class TodoActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }else if (id == R.id.action_add_task){
+        if (id == R.id.action_add_task){
             //start a new activty here  ...
             Intent i = new Intent(this,com.example.swetashinde.mytodo.AddTaskActivity.class);
-            //i.putExtra("position",position);
-            //i.putExtra("dataItem",dataItem);
 
-            //startActivityForResult(i,REQUEST_CODE);
+
             startActivityForResult(i,ADD_TASK_REQUEST_CODE);
             return true ;
         }

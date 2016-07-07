@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingTop="@dimen/padding_top"
+    android:paddingBottom="@dimen/padding_bottom"
+    android:paddingLeft="@dimen/margin_10"
+    android:paddingRight="@dimen/margin_10"
+    >
+
+<TableRow>
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/textName"
+        android:textColor="@color/colorPrimary"
+        android:text="hello"
+        android:textStyle="bold"
+
+        android:layout_weight="2"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+
+        />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/textPriority"
+        android:textStyle="bold"
+        android:text="world"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        />
+    </TableRow>
+    <TableRow>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/textNotes"
+        android:textColor="@color/black"
+        android:text="world" />
+    </TableRow>
+
+</TableLayout>

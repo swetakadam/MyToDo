@@ -10,7 +10,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class TaskDbHelper extends SQLiteOpenHelper {
 
     // If you change the database schema, you must increment the database version.
-    private static final int DATABASE_VERSION = 2;
+    private static final int DATABASE_VERSION = 3;
 
     static final String DATABASE_NAME = "mytodo.db";
 
@@ -27,7 +27,7 @@ public class TaskDbHelper extends SQLiteOpenHelper {
                 TaskContract.TaskEntry.COLUMN_NAME + " TEXT NOT NULL, "+
                 TaskContract.TaskEntry.COLUMN_NOTES + " TEXT NOT NULL, "+
                 TaskContract.TaskEntry.COLUMN_PRIORITY + " TEXT NOT NULL, "+
-                TaskContract.TaskEntry.COLUMN_DUE_DATE + " TEXT UNIQUE NOT NULL, "+
+                TaskContract.TaskEntry.COLUMN_DUE_DATE + " TEXT NOT NULL, "+
                 TaskContract.TaskEntry.COLUMN_STATUS + " TEXT NOT NULL "+
                 ");";
 

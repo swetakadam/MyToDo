@@ -29,6 +29,27 @@ public class Task{
         this.dueDate  = dueDate;
     }
 
+    public Long getId() {
+        return id;
+    }
 
+    public String getName() {
+        return name;
+    }
 
+    public String getNotes() {
+        return notes;
+    }
+
+    public String getPriority() {
+        return priority;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public String getDueDate() {
+        return dueDate;
+    }
 }
