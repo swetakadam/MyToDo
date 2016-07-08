@@ -29,6 +29,7 @@ import android.widget.Toast;
 
 import com.example.swetashinde.mytodo.custom.MyCursorAdapter;
 import com.example.swetashinde.mytodo.data.TaskContract;
+import com.example.swetashinde.mytodo.data.TaskProvider;
 import com.example.swetashinde.mytodo.model.Task;
 
 import org.apache.commons.io.FileUtils;
@@ -94,22 +95,10 @@ public class TodoActivity extends AppCompatActivity {
     }
 
 
-
-    public void addTodoItem(View v){
-
-       // EditText etNewItem = (EditText) findViewById(R.id.etNewItem);
-       // itemsAdapter.add(etNewItem.getText().toString());
-       // etNewItem.setText("");
-       // saveItems();
-
-
-    }
-
-    public void launchEditItemView(String dataItem,int position){
+    public void launchEditItemView(Task dataItem){
         Intent i = new Intent(this,com.example.swetashinde.mytodo.EditItemActivity.class);
-        i.putExtra("position",position);
-        i.putExtra("dataItem",dataItem);
-
+        //i.putExtra("position",position);
+        i.putExtra("dataItem",Parcels.wrap(dataItem));
         startActivityForResult(i,REQUEST_CODE);
     }
 
@@ -118,12 +107,34 @@ public class TodoActivity extends AppCompatActivity {
 
         if(resultCode == RESULT_OK && requestCode == REQUEST_CODE){
 
-            String editedText = data.getExtras().getString("editedDataItem");
-            int    position   = data.getExtras().getInt("position");
+            String deleteTaskId = data.getStringExtra("taskId");
 
-            items.set(position,editedText);
-            itemsAdapter.notifyDataSetChanged();
-            saveItems();
+            if(deleteTaskId != null ){
+                //delete the item  ...
+                ContentResolver resolver = getContentResolver();
+                resolver.delete(TaskContract.TaskEntry.buildTaskUri(Long.parseLong(deleteTaskId)),null,null);
+                taskCursor = readAll();
+                customAdapter.changeCursor(taskCursor);
+
+            }else {
+
+                Task task = (Task) Parcels.unwrap(data.getParcelableExtra("task"));
+
+                // need to update here :) ... but it should happen on another background thread ...
+                ContentResolver resolver = getContentResolver();
+                ContentValues values = new ContentValues();
+                values.put(TaskContract.TaskEntry.COLUMN_NAME, task.getName());
+                values.put(TaskContract.TaskEntry.COLUMN_NOTES, task.getNotes());
+                values.put(TaskContract.TaskEntry.COLUMN_PRIORITY, task.getPriority());
+                values.put(TaskContract.TaskEntry.COLUMN_STATUS, task.getStatus());
+                values.put(TaskContract.TaskEntry.COLUMN_DUE_DATE, task.getDueDate());
+
+                resolver.update(TaskContract.TaskEntry.buildTaskUri(task.getId()), values, null, null);
+
+                //update the Cursor
+                taskCursor = readAll();
+                customAdapter.changeCursor(taskCursor);
+            }
 
 
         } else if(resultCode == RESULT_OK && requestCode == ADD_TASK_REQUEST_CODE){
@@ -167,26 +178,28 @@ public class TodoActivity extends AppCompatActivity {
 
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                //String dataItem = items.get(position);
-                //launchEditItemView(dataItem,position);
+
+                Cursor cursor = (Cursor) customAdapter.getItem(position);
+                //make a Task obj .. send it to Edit item view  ... it will send back the Task object ... update that into database ..
+                // read all from database and reassign new cursor
+
+                Long   task_id       = cursor.getLong(cursor.getColumnIndex(TaskContract.TaskEntry._ID));
+                String name      = cursor.getString(cursor.getColumnIndex(TaskContract.TaskEntry.COLUMN_NAME));
+                String notes     = cursor.getString(cursor.getColumnIndex(TaskContract.TaskEntry.COLUMN_NOTES));
+                String priority  = cursor.getString(cursor.getColumnIndex(TaskContract.TaskEntry.COLUMN_PRIORITY));
+                String status    = cursor.getString(cursor.getColumnIndex(TaskContract.TaskEntry.COLUMN_STATUS));
+                String dueDate   = cursor.getString(cursor.getColumnIndex(TaskContract.TaskEntry.COLUMN_DUE_DATE));
+
+
+                Task t = new Task(task_id,name,notes,priority,status,dueDate);
+
+               // Log.v(LOGTAG,"the task id selected to edit is "+task.getColumnNames());
+                launchEditItemView(t);
             }
         });
     }
 
-    //reading and writing from files
-    private void readItems(){
 
-        File filesDir = getFilesDir();
-        File todoFile = new File(filesDir,"mytodo.txt");
-        try{
-            String encoding = null; // platform default
-            items = new ArrayList<String>(FileUtils.readLines(todoFile,encoding));
-        }catch(IOException ex){
-            items = new ArrayList<String>();
-            ex.printStackTrace();
-        }
-
-    }
 
     //read from database using content provider
     private Cursor readAll(){
@@ -195,19 +208,6 @@ public class TodoActivity extends AppCompatActivity {
         return taskCursor;
     }
 
-    private void saveItems(){
-
-        File filesDir = getFilesDir();
-        File todoFile = new File(filesDir,"mytodo.txt");
-        try{
-            FileUtils.writeLines(todoFile,items,true);
-
-        }catch(IOException ex){
-            items = new ArrayList<String>();
-            ex.printStackTrace();
-        }
-
-    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

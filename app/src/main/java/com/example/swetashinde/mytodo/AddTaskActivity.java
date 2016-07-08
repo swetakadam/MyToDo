@@ -30,13 +30,6 @@ public class AddTaskActivity extends AppCompatActivity implements DatePickerFrag
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_task_with_menu);
-        //showDatePickerDialog();
-       /* if (savedInstanceState == null) {
-            getSupportFragmentManager().beginTransaction()
-                    .add(new DatePickerFragment(),"datePicker")
-                    .commit();
-        }*/
-
 
         //set spinner style
         // Get reference of widgets from XML layout
@@ -61,7 +54,7 @@ public class AddTaskActivity extends AppCompatActivity implements DatePickerFrag
         ArrayAdapter<String> statusSpinnerArrayAdapter = new ArrayAdapter<String>(
                 this,R.layout.spinner_item,statusOptions
         );
-        spinnerArrayAdapter.setDropDownViewResource(R.layout.spinner_item);
+        statusSpinnerArrayAdapter.setDropDownViewResource(R.layout.spinner_item);
         statusSpinner.setAdapter(statusSpinnerArrayAdapter);
 
         addListenerOnPrioritySpinnerItemSelection();

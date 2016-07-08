@@ -136,6 +136,11 @@ public class TaskProvider extends ContentProvider{
                 numOfDeletedRecords = db.delete(TaskContract.TaskEntry.TABLE_NAME,selection,selectionArgs);
                 break;
             }
+            case TASK_WITH_ID : {
+                numOfDeletedRecords = db.delete(TaskContract.TaskEntry.TABLE_NAME,TaskContract.TaskEntry._ID + "= ?",
+                        new String[] { Long.toString(TaskContract.TaskEntry.getIdFromUri(uri))});
+                break;
+            }
             // more cases for future based on  different uri's
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
@@ -156,9 +161,11 @@ public class TaskProvider extends ContentProvider{
 
         // handle.  If it doesn't match these, throw an UnsupportedOperationException.
         switch (match) {
-            case TASK: {
-                numOfUpdatedRecords = db.update(TaskContract.TaskEntry.TABLE_NAME,values,selection,selectionArgs);
+            case TASK_WITH_ID: {
+                numOfUpdatedRecords = db.update(TaskContract.TaskEntry.TABLE_NAME,values,TaskContract.TaskEntry._ID + "= ?",
+                        new String[] { Long.toString(TaskContract.TaskEntry.getIdFromUri(uri))});
                 break;
+
             }
             // more cases for future based on  different uri's
             default:
